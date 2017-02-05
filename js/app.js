@@ -1,12 +1,6 @@
 var map;
 // Create a new blank array for all the listing markers
 var markers =[];
-function initMap() {
-  map = new google.maps.Map(document.getElementById('map'),{
-  center: {lat: 49.284276, lng: -123.118337},
-  zoom: 13
-});
-
 var locations =[
  {
   title: 'Vancouver Aquarium',
@@ -38,9 +32,13 @@ var locations =[
     location: {lat: 49.279859, lng: -123.115679},
     content:'A grand library with lots of books to provide education and knowledge'
   },
-]
+];
 
-
+function initMap() {
+  map = new google.maps.Map(document.getElementById('map'),{
+  center: {lat: 49.284276, lng: -123.118337},
+  zoom: 13
+});
 
 var largeInfowindow = new google.maps.InfoWindow();
 var bounds = new google.maps.LatLngBounds();
@@ -113,15 +111,12 @@ var Location = function(data){
 var ViewModel = function(){
   var self = this;
 
-  this.locationList = ko.observableArray([]);
+  self.locationList = ko.observableArray([]);
   locations.forEach(function(locationsItem){
   self.locationList.push(new Location(locationsItem));
   });
 
-  this.currentLocation = ko.observation(this.locationList()[0]);
+  this.currentLocation = ko.observable(this.locationList()[0]);
 
 }
 ko.applyBindings(new ViewModel());
-
- 
-
