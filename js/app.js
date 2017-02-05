@@ -5,31 +5,37 @@ var locations =[
  {
   title: 'Vancouver Aquarium',
   location: {lat: 49.300814, lng: -123.130908},
+  image: 'images/VancouverAquarium.jpg',
   content:'Popular kid-friendly attraction with local & exotic aquatic life'
   },
  {
   title: 'Granville Island Market',
   location: {lat: 49.272581, lng: -123.135076},
+  image: 'images/GranvilleIsland.jpg',
   content:'Public Market of fresh seafood and attraction of thriving artist community'
   },
  {
   title: 'Canada Place',
   location: {lat: 49.289014, lng: -123.111078},
+  image: 'images/CanadaPlace.jpg',
   content:'Extraordinary lookout for Vancouver'
  },
  {
    title: 'English Bay Beach',
    location: {lat: 49.286443, lng: -123.143498},
+   image: 'images/EnglishBay.jpg',
    content:'Bustling Beach with lots of outdoor activities'
   },
   {
     title: 'Science World',
     location: {lat: 49.273593, lng: -123.103845},
+    image: 'images/ScienceWorld.jpg',
     content:'Amazing science displays for children and adults to learn'
    },
    {
     title: 'Vancouver Public Library',
     location: {lat: 49.279859, lng: -123.115679},
+    image: 'images/VancouverPublicLibrary.jpg',
     content:'A grand library with lots of books to provide education and knowledge'
   },
 ];
@@ -64,6 +70,8 @@ for(var i=0; i < locations.length; i++){
  marker.addListener('click',function(){
    populateInfoWindow(this, largeInfowindow);
  });
+
+
 }
 map.fitBounds(bounds);
 
@@ -106,17 +114,28 @@ var Filter = function(data) {
 var Location = function(data){
   this.title = ko.observable(data.title);
   this.content = ko.observable(data.content);
+
 }
+
+
 
 var ViewModel = function(){
   var self = this;
+  self.searchFilter = ko.observable('');
 
-  self.locationList = ko.observableArray([]);
+  this.locationList = ko.observableArray([]);
+
   locations.forEach(function(locationsItem){
   self.locationList.push(new Location(locationsItem));
   });
 
   this.currentLocation = ko.observable(this.locationList()[0]);
+  this.setLocation = function(clickedLocation){
+    self.currentCat(clickedLocation);
+  }
 
 }
+
+
+
 ko.applyBindings(new ViewModel());
