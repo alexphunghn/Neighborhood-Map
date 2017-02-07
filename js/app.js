@@ -117,6 +117,24 @@ var Location = function(data){
 
 }
 
+var onNewSearchTerm = function(newTerm) {
+    clearMarkerState();
+    viewModel.searchOptions.removeAll();
+    for (var i = 0; i < viewModel.markers.length; i++) {
+        var title = viewModel.markers[i].title.toLowerCase();
+
+        if (title === newTerm.toLowerCase()) {
+            storeMarkerInHistory(viewModel.markers[i]);
+        } else if (title.indexOf(newTerm.toLowerCase()) >= 0) {
+            viewModel.markers[i].setVisible(true);
+            if (viewModel.searchHistory.indexOf(viewModel.markers[i]) >= 0) {
+                viewModel.searchOptions.push(viewModel.markers[i]);
+            }
+        } else if (newTerm.length > 0) {
+            viewModel.markers[i].setVisible(false);
+        }
+    }
+};
 
 
 var ViewModel = function(){
@@ -129,10 +147,12 @@ var ViewModel = function(){
   self.locationList.push(new Location(locationsItem));
   });
 
+
   this.currentLocation = ko.observable(this.locationList()[0]);
   this.setLocation = function(clickedLocation){
     self.currentCat(clickedLocation);
   }
+  
 
 }
 
