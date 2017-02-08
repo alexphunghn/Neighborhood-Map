@@ -40,6 +40,8 @@ var locations =[
   },
 ];
 
+
+
 function initMap() {
   map = new google.maps.Map(document.getElementById('map'),{
   center: {lat: 49.284276, lng: -123.118337},
@@ -117,29 +119,12 @@ var Location = function(data){
 
 }
 
-var onNewSearchTerm = function(newTerm) {
-    clearMarkerState();
-    viewModel.searchOptions.removeAll();
-    for (var i = 0; i < viewModel.markers.length; i++) {
-        var title = viewModel.markers[i].title.toLowerCase();
 
-        if (title === newTerm.toLowerCase()) {
-            storeMarkerInHistory(viewModel.markers[i]);
-        } else if (title.indexOf(newTerm.toLowerCase()) >= 0) {
-            viewModel.markers[i].setVisible(true);
-            if (viewModel.searchHistory.indexOf(viewModel.markers[i]) >= 0) {
-                viewModel.searchOptions.push(viewModel.markers[i]);
-            }
-        } else if (newTerm.length > 0) {
-            viewModel.markers[i].setVisible(false);
-        }
-    }
-};
 
 
 var ViewModel = function(){
   var self = this;
-  self.searchFilter = ko.observable('');
+  self.searchInput = ko.observable('');
 
   this.locationList = ko.observableArray([]);
 
@@ -148,11 +133,41 @@ var ViewModel = function(){
   });
 
 
-  this.currentLocation = ko.observable(this.locationList()[0]);
-  this.setLocation = function(clickedLocation){
-    self.currentCat(clickedLocation);
-  }
-  
+
+
+  this.searchFilter = ko.computed(function() {
+    var searchInput = self.searchInput().toLowerCase();
+    var foundLocations = ko.observableArray([]);
+    //console.log(self.searchInput());
+    //console.log(searchInput);
+    if (!searchInput) {
+      return self.locationList();
+
+    } else {
+      self.locationList().forEach(function(location) {
+        var title = location.title().toLowerCase();
+        var found = title.indexOf(searchInput);
+
+        //console.log(location.title());
+        //console.log(title, searchInput, found);
+        if (found > -1) {
+          console.log("found");
+          foundLocations.push(location);
+
+        }
+      });
+      return foundLocations();
+
+    };
+
+    for(var i= 0; i < marker.length; i++ ){
+      if (found > -1){
+        foundLocations.push(marker[i]);
+      }
+    }
+
+  });
+
 
 }
 
