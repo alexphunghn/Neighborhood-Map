@@ -7,9 +7,10 @@
  </head>
  <body>
    <div id="control-bar">
- 		<div id="search">
+   		 <input data-bind="textInput: searchInput"></input>
+ 	<!-- 	<div id="search">
  			<input data-bind="value: searchFilter, valueUpdate: 'afterkeydown'" placeholder="search" class="search-input"/>
- 		</div>
+ 		</div> -->
 
  	</div>
    <div class="container">
@@ -17,14 +18,13 @@
        <h1>Discover Vancouver</h1>
     <input id="show-listings" type="button" value="Show Listings">
     <input id="hide-listings" type="button" value="Hide Listings">
+
    </div>
-   <ul data-bind="foreach: locationList" id="location-list">
-      <li data-bind = "text: title"></li>
+   <!-- <ul data-bind="foreach: locationList" id="location-list"> -->
+   <ul data-bind="foreach: searchFilter" id="location-list">
+      <li data-bind = "text: title, click: $parent.setLocation"></li>
     </ul>
-    <div data-bind = "with: currentLocation" id="location">
-      <h2 data-bind="text: title"></h2>
-      <h3 data-bind="text: content"></h3>
-    </div>
+
    <div id="map"></div>
 
   <script async defer src="http://maps.googleapis.com/maps/api/js?libraries=places&key=AIzaSyDqDR12O1q1kNIMaBLZG9ULeH2zwD21vFc&callback=initMap"></script>
@@ -32,4 +32,3 @@
   <script src="js/app.js"></script>
  </body>
 </html>
-
