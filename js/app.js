@@ -1,6 +1,7 @@
 var map;
 // Create a new blank array for all the listing markers
 var markers =[];
+// Create locations to appear on map
 var locations =[
  {
   title: 'Vancouver Aquarium',
@@ -40,7 +41,7 @@ var locations =[
   },
 ];
 
-
+//Create initMap function for Google map
 
 function initMap() {
   map = new google.maps.Map(document.getElementById('map'),{
@@ -72,25 +73,25 @@ for(var i=0; i < locations.length; i++){
  marker.addListener('click',function(){
    populateInfoWindow(this, largeInfowindow);
  });
-
-
 }
 map.fitBounds(bounds);
 
+//Create "showListings" and "hideListings" button
 document.getElementById('show-listings').addEventListener('click',showListings);
 document.getElementById('hide-listings').addEventListener('click',hideListings);
 }
 function populateInfoWindow(marker, infowindow){
  if(infowindow.marker != marker){
    infowindow.marker = marker;
-   infowindow.setContent('<div>'+ marker.title +'</div>' +'<div>' + marker.content +'</div>');
+   infowindow.setContent('<div>'+'<b>'+ marker.title +'</b>'+'</div>'+'<div>'+ marker.content +'</div>');
    infowindow.open(map,marker);
-   //Make sure the marker property is cleared if the infowindow is  closed
+//Make sure the marker property is cleared if the infowindow is  closed
    infowindow.addListener('closeclick',function(){
      infowindow.setMarker(null);
    })
  }
 }
+//This function will loop through the listings and show them all
 function showListings(){
  var bounds = new google.maps.LatLngBounds();
  //Extend the boundaries of the map for each marker and display the marker
@@ -106,73 +107,55 @@ function hideListings(){
    markers[i].setMap(null);
  }
 }
-
-//Filter object
-var Filter = function(data) {
-	this.name = ko.observable(locations.title);
-	this.on = ko.observable(true);
-};
-
-var Location = function(data){
-  this.title = ko.observable(data.title);
-  this.content = ko.observable(data.content);
+//Create the Location variable
+var Location = function(data, i){
+  this.title = data.title;
+  this.content = data.content;
+  this.id = i;
 
 }
-
-
-
-
+//Create ViewModel function
 var ViewModel = function(){
   var self = this;
   self.searchInput = ko.observable('');
 
   this.locationList = ko.observableArray([]);
 
-  locations.forEach(function(locationsItem){
-  self.locationList.push(new Location(locationsItem));
+  locations.forEach(function(locationsItem, i){
+  self.locationList.push(new Location(locationsItem, i));
   });
-
-
-
-
+//This function will trigger the "click" function associated with location list
+  this.setLocation = function(location) {
+    var index = location.id;
+    google.maps.event.trigger(markers[index],"click");
+  };
+//Search filter to make it easy to find a location
   this.searchFilter = ko.computed(function() {
     var searchInput = self.searchInput().toLowerCase();
     var foundLocations = ko.observableArray([]);
-    //console.log(self.searchInput());
-    //console.log(searchInput);
+//The marker becomes visible with matching keywords
     if (!searchInput) {
+      markers.forEach(function(marker) {
+        marker.setVisible(true);
+      });
       return self.locationList();
 
     } else {
-      self.locationList().forEach(function(location) {
-        var title = location.title().toLowerCase();
+      self.locationList().forEach(function(location, i) {
+        var title = location.title.toLowerCase();
         var found = title.indexOf(searchInput);
-
-        //console.log(location.title());
-        //console.log(title, searchInput, found);
         if (found > -1) {
-          console.log("found");
           foundLocations.push(location);
-          markers.setVisible(true)
+          markers[i].setVisible(true);
+        } else {
+           markers[i].setVisible(false);
         }
       });
       return foundLocations();
 
     };
 
-    for(var i= 0; i < markers.length; i++ ){
-      if (found > -1){
-        markers.setVisible(true);
-      } else {
-        markers.setVisible(false);
-      }
-    }
-
   });
-
-
 }
-
-
 
 ko.applyBindings(new ViewModel());
