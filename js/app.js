@@ -153,16 +153,18 @@ var ViewModel = function(){
         if (found > -1) {
           console.log("found");
           foundLocations.push(location);
-
+          markers.setVisible(true)
         }
       });
       return foundLocations();
 
     };
 
-    for(var i= 0; i < marker.length; i++ ){
+    for(var i= 0; i < markers.length; i++ ){
       if (found > -1){
-        foundLocations.push(marker[i]);
+        markers.setVisible(true);
+      } else {
+        markers.setVisible(false);
       }
     }
 
