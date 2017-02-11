@@ -7,25 +7,23 @@
  </head>
  <body>
    <div id="control-bar">
+     <div id="search">
    		 <input data-bind="textInput: searchInput"></input>
- 	<!-- 	<div id="search">
- 			<input data-bind="value: searchFilter, valueUpdate: 'afterkeydown'" placeholder="search" class="search-input"/>
- 		</div> -->
-
- 	</div>
+     </div>
    <div class="container">
-
        <h1>Discover Vancouver</h1>
     <input id="show-listings" type="button" value="Show Listings">
     <input id="hide-listings" type="button" value="Hide Listings">
-
-   </div>
-   <!-- <ul data-bind="foreach: locationList" id="location-list"> -->
+  </div>
+  <main>
+  <div id="locations">
    <ul data-bind="foreach: searchFilter" id="location-list">
       <li data-bind = "text: title, click: $parent.setLocation"></li>
     </ul>
-
-   <div id="map"></div>
+  </div>
+  </div>
+  <div id="map"></div>
+</main>
 
   <script async defer src="http://maps.googleapis.com/maps/api/js?libraries=places&key=AIzaSyDqDR12O1q1kNIMaBLZG9ULeH2zwD21vFc&callback=initMap"></script>
   <script src="js/knockout.js"></script>
